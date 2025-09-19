@@ -1,3 +1,3 @@
-# crumb_collector
+# Crumb Collector
 
-A new Flutter project.
+This is a project for my User Interfaces class, using Dart and Flutter.

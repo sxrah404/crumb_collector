@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   desktop_window: ^0.4.2
+  google_fonts: ^6.3.1
 
 dev_dependencies:
   flutter_test:

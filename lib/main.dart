@@ -1,20 +1,16 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:desktop_window/desktop_window.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     await DesktopWindow.setWindowSize(const Size(500, 800));
   }
-
   runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CrumbCollectorApp(),
-    ),
+    MaterialApp(debugShowCheckedModeBanner: false, home: CrumbCollectorApp()),
   );
 }
 
@@ -121,18 +117,18 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
       child: const Icon(Icons.refresh, color: Colors.white, size: 24),
     );
 
-    const TextStyle statsText = TextStyle(
+    TextStyle statsText = GoogleFonts.montserrat(
       fontSize: 18,
-      fontWeight: FontWeight.w300,
+      fontWeight: FontWeight.w400,
     );
 
-    const TextStyle upgradeText = TextStyle(
+    TextStyle upgradeText = GoogleFonts.montserrat(
       fontSize: 20,
       fontWeight: FontWeight.w500,
       color: Colors.white,
     );
 
-    const TextStyle upgradeCostText = TextStyle(
+    TextStyle upgradeCostText = GoogleFonts.montserrat(
       fontSize: 14,
       fontWeight: FontWeight.w300,
       color: Colors.white,
@@ -142,14 +138,14 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 40.0),
           child: Column(
             children: [
               const SizedBox(height: 40),
 
               Text(
                 '$_crumbs Crumbs',
-                style: const TextStyle(
+                style: GoogleFonts.montserrat(
                   fontSize: 36,
                   fontWeight: FontWeight.w600,
                 ),
@@ -185,7 +181,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    textStyle: const TextStyle(
+                    textStyle: GoogleFonts.montserrat(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),

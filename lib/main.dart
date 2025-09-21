@@ -1,7 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:desktop_window/desktop_window.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    await DesktopWindow.setWindowSize(const Size(500, 800));
+  }
+
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -113,11 +121,28 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
       child: const Icon(Icons.refresh, color: Colors.white, size: 24),
     );
 
+    const TextStyle statsText = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w300,
+    );
+
+    const TextStyle upgradeText = TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    );
+
+    const TextStyle upgradeCostText = TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w300,
+      color: Colors.white,
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
           child: Column(
             children: [
               const SizedBox(height: 40),
@@ -137,25 +162,13 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                 children: [
                   Text(
                     'Lvl $_skillLevel Crumb Collector: $_crumbsPerClick crumb${_crumbsPerClick == 1 ? '' : 's'}/click',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                    ),
+                    style: statsText,
                   ),
                   Text(
                     '$_antCount Ant${_antCount == 1 ? '' : 's'}: $_crumbsPerSecond crumb/s',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                    ),
+                    style: statsText,
                   ),
-                  Text(
-                    'Weapon: ${_weapons[_weaponLevel]}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
+                  Text('Weapon: ${_weapons[_weaponLevel]}', style: statsText),
                 ],
               ),
 
@@ -187,7 +200,9 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                 width: double.infinity,
                 height: 80,
                 child: ElevatedButton(
-                  onPressed: _crumbs >= _skillUpgradeCost ? _upgradeSkill : null,
+                  onPressed: _crumbs >= _skillUpgradeCost
+                      ? _upgradeSkill
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.brown,
                     foregroundColor: Colors.white,
@@ -199,21 +214,10 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Upgrade Skill',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
+                      Text('Upgrade Skill', style: upgradeText),
                       Text(
                         '($_skillUpgradeCost Crumbs)',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white,
-                        ),
+                        style: upgradeCostText,
                       ),
                     ],
                   ),
@@ -238,22 +242,8 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Hire Ant',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        '($_antHireCost Crumbs)',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white,
-                        ),
-                      ),
+                      Text('Hire Ant', style: upgradeText),
+                      Text('($_antHireCost Crumbs)', style: upgradeCostText),
                     ],
                   ),
                 ),
@@ -265,7 +255,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                 width: double.infinity,
                 height: 80,
                 child: ElevatedButton(
-                  onPressed: _crumbs >= _weaponUpgradeCost
+                  onPressed: (_crumbs >= _weaponUpgradeCost && _weaponLevel < 3)
                       ? _upgradeWeapon
                       : null,
                   style: ElevatedButton.styleFrom(
@@ -279,21 +269,10 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Upgrade Weapon',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
+                      Text('Upgrade Weapon', style: upgradeText),
                       Text(
                         '($_weaponUpgradeCost Crumbs)',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white,
-                        ),
+                        style: upgradeCostText,
                       ),
                     ],
                   ),

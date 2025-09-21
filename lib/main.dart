@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -38,15 +37,15 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     final resetButton = ElevatedButton(
       onPressed: _reset,
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        shape: CircleBorder(),
         backgroundColor: Colors.brown,
-        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        padding: EdgeInsets.all(20),
       ),
-      child: const Text('RESET', style: TextStyle(color: Colors.white)),
+      child: const Icon(Icons.refresh, color: Colors.white, size: 30),
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE5E5E5),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
@@ -58,15 +57,44 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                 '$_crumbs Crumbs',
                 style: const TextStyle(
                   fontSize: 36,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
 
-              const SizedBox(height: 60),
+              const SizedBox(height: 20),
+
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Lvl 1 Crumb Collector: 1/click',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  Text(
+                    '1 Ant: 1/s',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  Text(
+                    'Weapon: None',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 40),
 
               SizedBox(
                 width: double.infinity,
-                height: 80,
+                height: 50,
                 child: ElevatedButton(
                   onPressed: _collectCrumbs,
                   style: ElevatedButton.styleFrom(
@@ -84,7 +112,8 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
+
               SizedBox(width: double.infinity, height: 50, child: resetButton),
             ],
           ),

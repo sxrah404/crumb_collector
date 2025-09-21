@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    await DesktopWindow.setWindowSize(const Size(500, 800));
+    await DesktopWindow.setWindowSize(const Size(500, 850));
   }
   runApp(
     MaterialApp(debugShowCheckedModeBanner: false, home: CrumbCollectorApp()),
@@ -32,6 +32,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
   int _weaponLevel = 0;
   int _weaponUpgradeCost = 20;
   List<String> _weapons = ['None', 'Rock', 'Stick', 'GUN'];
+  int _nextGrasshopperAttack = 60;
   Timer? _timer;
 
   @override
@@ -39,12 +40,16 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     super.initState();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_antCount > 0) {
-        setState(() {
+      setState(() {
+        if (_antCount > 0) {
           _crumbs += _antCount;
           _crumbsPerSecond = _antCount.toInt();
-        });
-      }
+        }
+        _nextGrasshopperAttack--;
+        if (_nextGrasshopperAttack <= 0) {
+          _executeGrasshopperAttack();
+        }
+      });
     });
   }
 
@@ -91,6 +96,39 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     }
   }
 
+  void _executeGrasshopperAttack() {
+    int stolenCrumbs = (_crumbs * 0.2).round();
+    List<int> protection = [0, 25, 50, 100];
+    int protectedCrumbs = (stolenCrumbs * protection[_weaponLevel] / 100)
+        .round();
+    stolenCrumbs -= protectedCrumbs;
+
+    _crumbs -= stolenCrumbs;
+    if (_crumbs < 0) {
+      _crumbs = 0;
+    }
+
+    _nextGrasshopperAttack = 60;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Grasshopper Attack!'),
+        content: Text(
+          _weaponLevel > 0
+              ? 'Your ${_weapons[_weaponLevel]} blocked ${protection[_weaponLevel]}% of the attack! $stolenCrumbs crumbs were stolen.'
+              : 'The grasshopper stole $stolenCrumbs crumbs! Buy a weapon to protect yourself!!',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _reset() {
     setState(() {
       _crumbs = 0;
@@ -102,6 +140,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
       _crumbsPerSecond = 0;
       _weaponLevel = 0;
       _weaponUpgradeCost = 20;
+      _nextGrasshopperAttack = 60;
     });
   }
 
@@ -165,6 +204,10 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
                     style: statsText,
                   ),
                   Text('Weapon: ${_weapons[_weaponLevel]}', style: statsText),
+                  Text(
+                    'Next Grasshopper Attack: $_nextGrasshopperAttack s',
+                    style: statsText,
+                  ),
                 ],
               ),
 

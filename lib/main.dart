@@ -32,7 +32,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
   int _weaponLevel = 0;
   int _weaponUpgradeCost = 20;
   List<String> _weapons = ['None', 'Rock', 'Stick', 'GUN'];
-  int _nextGrasshopperAttack = 60;
+  int _nextGrasshopperAttack = 60; // grasshopper attack every 60 secs
   Timer? _timer;
 
   @override
@@ -59,12 +59,14 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     super.dispose();
   }
 
+  // click to collect crumbs, crumbs per click depends on skill level
   void _collectCrumbs() {
     setState(() {
       _crumbs += _crumbsPerClick;
     });
   }
 
+  // upgrade skill level which increases crumbs per click
   void _upgradeSkill() {
     if (_crumbs >= _skillUpgradeCost) {
       setState(() {
@@ -76,6 +78,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     }
   }
 
+  // hire an ant for passive income
   void _hireAnt() {
     if (_crumbs >= _antHireCost) {
       setState(() {
@@ -86,6 +89,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     }
   }
 
+  // upgrade weapon which protects you from the evil grasshopper
   void _upgradeWeapon() {
     if (_crumbs >= _weaponUpgradeCost && _weaponLevel < 3) {
       setState(() {
@@ -96,9 +100,16 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     }
   }
 
+  // THE TWIST :D
   void _executeGrasshopperAttack() {
-    int stolenCrumbs = (_crumbs * 0.2).round();
-    List<int> protection = [0, 25, 50, 100];
+    int stolenCrumbs =
+        _crumbs; // by default, grasshopper steals all your crumbs
+    List<int> protection = [
+      0,
+      25,
+      50,
+      100,
+    ]; // ...unless you have a weapon! (rock = 25% protection, stick = 50% protection, gun = 100% protection)
     int protectedCrumbs = (stolenCrumbs * protection[_weaponLevel] / 100)
         .round();
     stolenCrumbs -= protectedCrumbs;
@@ -110,6 +121,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
 
     _nextGrasshopperAttack = 60;
 
+    // dialog pop up that tells you how many crumbs the evil grasshopper stole
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -129,6 +141,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     );
   }
 
+  // resets everything back to normal
   void _reset() {
     setState(() {
       _crumbs = 0;
@@ -144,18 +157,9 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
     });
   }
 
+  // the actual UI stuff
   @override
   Widget build(BuildContext context) {
-    final resetButton = ElevatedButton(
-      onPressed: _reset,
-      style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
-        backgroundColor: Colors.brown,
-        padding: EdgeInsets.all(20),
-      ),
-      child: const Icon(Icons.refresh, color: Colors.white, size: 24),
-    );
-
     TextStyle statsText = GoogleFonts.montserrat(
       fontSize: 18,
       fontWeight: FontWeight.w400,
@@ -173,6 +177,17 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
       color: Colors.white,
     );
 
+    // RESET BUTTON
+    final resetButton = ElevatedButton(
+      onPressed: _reset,
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        backgroundColor: Colors.brown,
+        padding: EdgeInsets.all(20),
+      ),
+      child: const Icon(Icons.refresh, color: Colors.white, size: 24),
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -182,6 +197,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
             children: [
               const SizedBox(height: 40),
 
+              // text element showing the amount of crumbs
               Text(
                 '$_crumbs Crumbs',
                 style: GoogleFonts.montserrat(
@@ -192,6 +208,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
 
               const SizedBox(height: 20),
 
+              // text element showing the stats
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -213,6 +230,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
 
               const SizedBox(height: 40),
 
+              // COLLECT CRUMB BUTTON
               SizedBox(
                 width: 300,
                 height: 80,
@@ -235,11 +253,14 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
 
               const SizedBox(height: 20),
 
+              // UPGRADE SKILL BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 80,
                 child: ElevatedButton(
-                  onPressed: _crumbs >= _skillUpgradeCost
+                  onPressed:
+                      _crumbs >=
+                          _skillUpgradeCost // displays button as null if you don't have enough crumbs to afford it
                       ? _upgradeSkill
                       : null,
                   style: ElevatedButton.styleFrom(
@@ -265,6 +286,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
 
               const SizedBox(height: 20),
 
+              // HIRE ANT BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 80,
@@ -290,6 +312,7 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
 
               const SizedBox(height: 20),
 
+              // UPGRADE WEAPON BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 80,

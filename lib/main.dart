@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:desktop_window/desktop_window.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart'; // i used the Montserrat font
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -177,17 +177,6 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
       color: Colors.white,
     );
 
-    // RESET BUTTON
-    final resetButton = ElevatedButton(
-      onPressed: _reset,
-      style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
-        backgroundColor: Colors.brown,
-        padding: EdgeInsets.all(20),
-      ),
-      child: const Icon(Icons.refresh, color: Colors.white, size: 24),
-    );
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -343,7 +332,23 @@ class _CrumbCollectorAppState extends State<CrumbCollectorApp> {
 
               const SizedBox(height: 20),
 
-              SizedBox(width: double.infinity, height: 50, child: resetButton),
+              // RESET BUTTON
+              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _reset,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown,
+                    padding: EdgeInsets.all(20),
+                    shape: CircleBorder(),
+                  ),
+                  child: const Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
